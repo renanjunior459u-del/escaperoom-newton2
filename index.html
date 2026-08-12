@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Escape Newton</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:#050814;
+color:white;
+font-family:Arial,sans-serif;
+text-align:center;
+}
+
+h1{
+color:#ffd83d;
+margin:15px 0 5px;
+font-size:38px;
+}
+
+.subtitle{
+color:#b8c4df;
+margin-bottom:12px;
+}
+
+#game{
+width:min(780px,96vw);
+height:auto;
+border:3px solid #294d9b;
+border-radius:12px;
+background:#02040a;
+display:block;
+margin:auto;
+}
+
+.stats{
+width:min(780px,96vw);
+margin:10px auto;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:6px;
+}
+
+.stat{
+background:#11182d;
+border:1px solid #294071;
+border-radius:8px;
+padding:7px;
+font-size:12px;
+color:#9caaca;
+}
+
+.stat b{
+display:block;
+font-size:17px;
+color:white;
+margin-top:3px;
+}
+
+.buttons{
+margin:10px auto;
+width:min(780px,96vw);
+display:flex;
+justify-content:center;
+gap:8px;
+flex-wrap:wrap;
+}
+
+button{
+border:0;
+border-radius:9px;
+padding:11px 16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.start{
+background:#ffd83d;
+color:#171300;
+}
+
+.normal{
+background:#26375f;
+color:white;
+}
+
+.controls{
+display:grid;
+grid-template-columns:60px 60px 60px;
+justify-content:center;
+gap:5px;
+margin:12px auto;
+}
+
+.controls button{
+height:52px;
+font-size:20px;
+background:#172548;
+color:white;
+border:1px solid #38518a;
+}
+
+.pause{
+grid-column:1/4;
+font-size:13px!important;
+}
+
+.info{
+width:min(780px,96vw);
+margin:15px auto;
+background:#10172b;
+border:1px solid #2d4478;
+border-radius:12px;
+padding:12px;
+text-align:left;
+}
+
+.info h2{
+color:#ffd83d;
+margin-top:0;
+}
+
+.info p{
+line-height:1.5;
+color:#c3cde1;
+}
+
+.progress{
+height:9px;
+background:#202a44;
+border-radius:20px;
+overflow:hidden;
+}
+
+#bar{
+height:100%;
+width:0%;
+background:#ffd83d;
+}
+
+.overlay{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.78);
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+z-index:20;
+}
+
+.box{
+background:#11182d;
+border:2px solid #385ca4;
+border-radius:15px;
+width:min(650px,95vw);
+padding:20px;
+}
+
+.box h2{
+color:#ffd83d;
+}
+
+.answers{
+display:grid;
+gap:9px;
+margin-top:15px;
+}
+
+.answers button{
+background:#1d2b4d;
+border:1px solid #3c5485;
+color:white;
+text-align:left;
+}
+
+.answers button:hover{
+background:#29406f;
+}
+
+#feedback{
+margin:15px 0;
+min-height:22px;
+font-weight:bold;
+}
+
+.good{
+color:#55e38a;
+}
+
+.bad{
+color:#ff6570;
+}
+
+#finalScore{
+font-size:35px;
+color:#ffd83d;
+font-weight:bold;
+margin:15px;
+}
+
+@media(max-width:600px){
+
+h1{
+font-size:28px;
+}
+
+.stats{
+grid-template-columns:repeat(3,1fr);
+}
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<h1>⚡ ESCAPE NEWTON</h1>
+
+<div class="subtitle">
+Labirinto da Inércia — responda 12 perguntas para escapar!
+</div>
+
+
+<div class="stats">
+
+<div class="stat">
+PONTOS
+<b id="score">0</b>
+</div>
+
+<div class="stat">
+MISSÕES
+<b id="count">0/12</b>
+</div>
+
+<div class="stat">
+VIDAS
+<b id="lives">❤️❤️❤️</b>
+</div>
+
+<div class="stat">
+TEMPO
+<b id="time">05:00</b>
+</div>
+
+<div class="stat">
+RECORDE
+<b id="best">0</b>
+</div>
+
+</div>
+
+
+<canvas
+id="game"
+width="780"
+height="600">
+</canvas>
+
+
+<div class="buttons">
+
+<button class="start" onclick="startGame()">
+▶ COMEÇAR
+</button>
+
+<button class="normal" onclick="startGame()">
+↻ REINICIAR
+</button>
+
+<button class="normal" onclick="toggleSound()">
+🔊 SOM
+</button>
+
+</div>
+
+
+<div class="controls">
+
+<span></span>
+
+<button onclick="movePlayer(0,-1)">
+▲
+</button>
+
+<span></span>
+
+<button onclick="movePlayer(-1,0)">
+◀
+</button>
+
+<button onclick="movePlayer(0,1)">
+▼
+</button>
+
+<button onclick="movePlayer(1,0)">
+▶
+</button>
+
+<button
+class="pause"
+onclick="togglePause()">
+⏸ PAUSAR
+</button>
+
+</div>
+
+
+<div class="info">
+
+<h2>🎯 COMO JOGAR</h2>
+
+<p>
+Encontre os <b>12 pontos amarelos (?)</b> espalhados pelo labirinto.
+Cada ponto abre uma pergunta sobre a Primeira Lei de Newton.
+</p>
+
+<p>
+✅ Resposta correta: <b>+100 pontos</b>
+</p>
+
+<p>
+❌ Resposta errada: <b>-25 pontos e -1 vida</b>
+</p>
+
+<p>
+👻 Cuidado com os fantasmas! Se eles encostarem em você, perde uma vida.
+</p>
+
+<p>
+🚪 Depois de responder as 12 perguntas, vá até a saída verde.
+</p>
+
+<div class="progress">
+<div id="bar"></div>
+</div>
+
+<p>
+<b>1ª Lei de Newton:</b>
+Um corpo tende a permanecer em repouso ou em movimento retilíneo uniforme quando a força resultante sobre ele é zero.
+</p>
+
+</div>
+
+
+<!-- PERGUNTAS -->
+
+<div class="overlay" id="quiz">
+
+<div class="box">
+
+<h2 id="questionTitle">
+🧠 Pergunta
+</h2>
+
+<p id="questionText"></p>
+
+<div class="answers"
+id="answers">
+</div>
+
+<div id="feedback"></div>
+
+<button
+class="start"
+id="continueButton"
+style="display:none">
+Continuar
+</button>
+
+</div>
+
+</div>
+
+
+<!-- FINAL -->
+
+<div class="overlay" id="finish">
+
+<div class="box">
+
+<h2 id="finishTitle">
+🏆 Fim
+</h2>
+
+<div id="finalScore">
+0 pontos
+</div>
+
+<p id="finishText"></p>
+
+<button
+class="start"
+onclick="closeFinish()">
+Jogar novamente
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+/* =========================================================
+   CONFIGURAÇÕES
+========================================================= */
+
+const canvas =
+document.getElementById("game");
+
+const ctx =
+canvas.getContext("2d");
+
+const TILE = 30;
+
+const COLS = 26;
+
+const ROWS = 20;
+
+
+/* =========================================================
+   NOVO MAPA
+   TODOS OS CORREDORES SÃO CONECTADOS.
+========================================================= */
+
+const map = [
+
+"##########################",
+
+"#........................#",
+
+"#.########################",
+
+"#........................#",
+
+"########################.#",
+
+"#........................#",
+
+"#.########################",
+
+"#........................#",
+
+"########################.#",
+
+"#........................#",
+
+"#.########################",
+
+"#........................#",
+
+"########################.#",
+
+"#........................#",
+
+"#.########################",
+
+"#........................#",
+
+"########################.#",
+
+"#........................#",
+
+"#.########################",
+
+"##########################"
+
+].map(row => row.split(""));
+
+
+/* =========================================================
+   POSIÇÃO DAS 12 MISSÕES
+========================================================= */
+
+const missions = [
+
+[3,1],
+[8,1],
+[15,1],
+[22,1],
+
+[3,3],
+[10,3],
+[18,3],
+
+[22,5],
+
+[5,7],
+[14,7],
+
+[20,9],
+
+[7,11]
+
+];
+
+
+/* =========================================================
+   SAÍDA
+========================================================= */
+
+const exit = {
+x:22,
+y:17
+};
+
+
+/* =========================================================
+   PERGUNTAS
+========================================================= */
+
+const questions = [
+
+{
+
+q:"O que afirma a Primeira Lei de Newton?",
+
+a:[
+"Todo corpo precisa de uma força para continuar se movendo.",
+"Um corpo permanece em repouso ou em movimento retilíneo uniforme quando a força resultante é zero.",
+"Todo corpo parado possui força resultante máxima.",
+"A velocidade de um corpo sempre aumenta."
+],
+
+correct:1
+
+},
+
+
+{
+
+q:"Qual conceito está diretamente relacionado à Primeira Lei de Newton?",
+
+a:[
+"Inércia",
+"Temperatura",
+"Pressão",
+"Potência"
+],
+
+correct:0
+
+},
+
+
+{
+
+q:"Um livro está parado sobre uma mesa e a força resultante é zero. O que acontece?",
+
+a:[
+"Ele começa a subir.",
+"Ele continua em repouso.",
+"Ele acelera para a direita.",
+"Ele começa a girar sozinho."
+],
+
+correct:1
+
+},
+
+
+{
+
+q:"Um objeto está se movimentando em linha reta com velocidade constante. Qual é sua força resultante?",
+
+a:[
+"Zero.",
+"Máxima.",
+"Sempre para frente.",
+"Sempre para trás."
+],
+
+correct:0
+
+},
+
+
+{
+
+q:"Por que uma pessoa tende a ir para frente quando um ônibus freia?",
+
+a:[
+"Por causa da inércia.",
+"Porque a massa desaparece.",
+"Porque a gravidade aumenta.",
+"Porque o banco empurra a pessoa."
+],
+
+correct:0
+
+},
+
+
+{
+
+q:"Qual situação representa a inércia?",
+
+a:[
+"Uma bola mudando de direção devido a uma força.",
+"Um passageiro indo para frente quando o carro freia.",
+"Uma lâmpada acendendo.",
+"Uma mola sendo comprimida."
+],
+
+correct:1
+
+},
+
+
+{
+
+q:"Se a força resultante sobre um corpo não é zero, ele pode:",
+
+a:[
+"Continuar necessariamente com velocidade constante.",
+"Soferer aceleração.",
+"Perder sua massa.",
+"Perder sua inércia."
+],
+
+correct:1
+
+},
+
+
+{
+
+q:"A inércia está relacionada principalmente à:",
+
+a:[
+"Cor.",
+"Massa.",
+"Temperatura.",
+"Velocidade da luz."
+],
+
+correct:1
+
+},
+
+
+{
+
+q:"Um objeto no espaço continua em movimento sem uma força resultante significativa. O que acontece?",
+
+a:[
+"Ele para imediatamente.",
+"Ele acelera sozinho.",
+"Ele continua em movimento retilíneo uniforme.",
+"Ele desaparece."
+],
+
+correct:2
+
+},
+
+
+{
+
+q:"Qual afirmação está correta?",
+
+a:[
+"Inércia é uma força.",
+"Inércia é a tendência de resistir a mudanças no movimento.",
+"Somente objetos parados possuem inércia.",
+"Objetos pequenos não possuem inércia."
+],
+
+correct:1
+
+},
+
+
+{
+
+q:"Duas forças de mesma intensidade e sentidos opostos atuam em um objeto. A força resultante é:",
+
+a:[
+"Zero.",
+"O dobro.",
+"A metade.",
+"Impossível de calcular."
+],
+
+correct:0
+
+},
+
+
+{
+
+q:"Por que usamos cinto de segurança no carro?",
+
+a:[
+"Para aumentar a velocidade.",
+"Para impedir que o corpo continue seguindo para frente por causa da inércia.",
+"Para diminuir a massa.",
+"Para eliminar a gravidade."
+],
+
+correct:1
+
+}
+
+];
+
+
+/* =========================================================
+   JOGADOR
+========================================================= */
+
+let player = {
+
+x:1,
+
+y:1
+
+};
+
+
+/* =========================================================
+   FANTASMAS
+========================================================= */
+
+let ghosts = [
+
+{
+
+x:12,
+y:9,
+color:"#ff4d5d"
+
+},
+
+{
+
+x:20,
+y:9,
+color:"#4edfff"
+
+},
+
+{
+
+x:8,
+y:15,
+color:"#ff80d0"
+
+}
+
+];
+
+
+/* =========================================================
+   VARIÁVEIS
+========================================================= */
+
+let score = 0;
+
+let lives = 3;
+
+let answered = 0;
+
+let timeLeft = 300;
+
+let playing = false;
+
+let paused = false;
+
+let currentMission = null;
+
+let completed = new Set();
+
+let timer = null;
+
+let ghostTimer = null;
+
+let soundOn = true;
+
+let animation = 0;
+
+
+/* =========================================================
+   VERIFICA PAREDE
+========================================================= */
+
+function isWall(x,y){
+
+return (
+
+x < 0 ||
+
+y < 0 ||
+
+x >= COLS ||
+
+y >= ROWS ||
+
+map[y][x] === "#"
+
+);
+
+}
+
+
+/* =========================================================
+   ATUALIZA INTERFACE
+========================================================= */
+
+function updateUI(){
+
+document.getElementById("score").textContent =
+score;
+
+document.getElementById("count").textContent =
+answered + "/12";
+
+document.getElementById("lives").textContent =
+"❤️".repeat(lives) +
+"🖤".repeat(3-lives);
+
+let min =
+Math.floor(timeLeft/60);
+
+let sec =
+timeLeft%60;
+
+document.getElementById("time").textContent =
+String(min).padStart(2,"0") +
+":" +
+String(sec).padStart(2,"0");
+
+document.getElementById("bar").style.width =
+(answered/12*100) + "%";
+
+document.getElementById("best").textContent =
+localStorage.getItem("escapeNewtonBest") || 0;
+
+}
+
+
+/* =========================================================
+   SOM
+========================================================= */
+
+function beep(freq){
+
+if(!soundOn)return;
+
+try{
+
+const audio =
+new AudioContext();
+
+const oscillator =
+audio.createOscillator();
+
+const gain =
+audio.createGain();
+
+oscillator.frequency.value =
+freq;
+
+gain.gain.value =
+0.03;
+
+oscillator.connect(gain);
+
+gain.connect(audio.destination);
+
+oscillator.start();
+
+oscillator.stop(
+audio.currentTime + .08
+);
+
+}catch(e){}
+
+}
+
+
+function toggleSound(){
+
+soundOn=!soundOn;
+
+}
+
+
+/* =========================================================
+   DESENHAR MAPA
+========================================================= */
+
+function draw(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+
+/* fundo */
+
+ctx.fillStyle="#02040a";
+
+ctx.fillRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+
+/* paredes */
+
+for(let y=0;y<ROWS;y++){
+
+for(let x=0;x<COLS;x++){
+
+if(map[y][x]==="#"){
+
+ctx.fillStyle="#0b1c47";
+
+ctx.fillRect(
+x*TILE,
+y*TILE,
+TILE,
+TILE
+);
+
+ctx.strokeStyle="#294d9b";
+
+ctx.strokeRect(
+x*TILE+1,
+y*TILE+1,
+TILE-2,
+TILE-2
+);
+
+}
+
+}
+
+}
+
+
+/* missões */
+
+missions.forEach((mission,index)=>{
+
+if(completed.has(index))
+return;
+
+let cx =
+mission[0]*TILE+15;
+
+let cy =
+mission[1]*TILE+15;
+
+let pulse =
+Math.sin(animation*.1+index)*2;
+
+ctx.fillStyle="#ffd83d";
+
+ctx.beginPath();
+
+ctx.arc(
+cx,
+cy,
+7+pulse,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+ctx.fillStyle="#171300";
+
+ctx.font="bold 11px Arial";
+
+ctx.textAlign="center";
+
+ctx.textBaseline="middle";
+
+ctx.fillText(
+"?",
+cx,
+cy
+);
+
+});
+
+
+/* saída */
+
+let ex =
+exit.x*TILE+15;
+
+let ey =
+exit.y*TILE+15;
+
+ctx.fillStyle =
+answered===12
+?"#55e38a"
+:"#7d2634";
+
+ctx.fillRect(
+ex-9,
+ey-12,
+18,
+24
+);
+
+ctx.fillStyle="white";
+
+ctx.font="bold 8px Arial";
+
+ctx.fillText(
+"SAÍDA",
+ex,
+ey+22
+);
+
+
+/* fantasmas */
+
+ghosts.forEach(g=>{
+
+let gx =
+g.x*TILE+15;
+
+let gy =
+g.y*TILE+15;
+
+ctx.fillStyle =
+g.color;
+
+ctx.beginPath();
+
+ctx.arc(
+gx,
+gy-2,
+10,
+Math.PI,
+0
+);
+
+ctx.lineTo(
+gx+10,
+gy+10
+);
+
+ctx.lineTo(
+gx+5,
+gy+6
+);
+
+ctx.lineTo(
+gx,
+gy+10
+);
+
+ctx.lineTo(
+gx-5,
+gy+6
+);
+
+ctx.lineTo(
+gx-10,
+gy+10
+);
+
+ctx.closePath();
+
+ctx.fill();
+
+
+/* olhos */
+
+ctx.fillStyle="white";
+
+ctx.beginPath();
+
+ctx.arc(
+gx-4,
+gy-3,
+3,
+0,
+Math.PI*2
+);
+
+ctx.arc(
+gx+4,
+gy-3,
+3,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+});
+
+
+/* jogador */
+
+let px =
+player.x*TILE+15;
+
+let py =
+player.y*TILE+15;
+
+ctx.fillStyle="#ffd83d";
+
+ctx.beginPath();
+
+ctx.arc(
+px,
+py,
+11,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+/* olho */
+
+ctx.fillStyle="#171300";
+
+ctx.beginPath();
+
+ctx.arc(
+px+4,
+py-5,
+1.5,
+0,
+Math.PI*2
+);
+
+ctx.fill();
+
+
+animation++;
+
+requestAnimationFrame(draw);
+
+}
+
+
+/* =========================================================
+   MOVIMENTO DO JOGADOR
+========================================================= */
+
+function movePlayer(dx,dy){
+
+if(!playing)
+return;
+
+if(paused)
+return;
+
+if(currentMission!==null)
+return;
+
+let nx =
+player.x+dx;
+
+let ny =
+player.y+dy;
+
+if(isWall(nx,ny))
+return;
+
+player.x=nx;
+
+player.y=ny;
+
+beep(250);
+
+checkMission();
+
+checkExit();
+
+checkCollision();
+
+}
+
+
+/* =========================================================
+   ENCONTRAR MISSÃO
+========================================================= */
+
+function checkMission(){
+
+for(
+let i=0;
+i<missions.length;
+i++
+){
+
+let m =
+missions[i];
+
+if(
+!completed.has(i) &&
+m[0]===player.x &&
+m[1]===player.y
+){
+
+openQuestion(i);
+
+return;
+
+}
+
+}
+
+}
+
+
+/* =========================================================
+   ABRIR PERGUNTA
+========================================================= */
+
+function openQuestion(index){
+
+currentMission=index;
+
+paused=true;
+
+let q =
+questions[index];
+
+document.getElementById(
+"questionTitle"
+).textContent =
+"🧠 Pergunta " +
+(answered+1) +
+" de 12";
+
+document.getElementById(
+"questionText"
+).textContent =
+q.q;
+
+let container =
+document.getElementById("answers");
+
+container.innerHTML="";
+
+document.getElementById(
+"feedback"
+).textContent="";
+
+document.getElementById(
+"continueButton"
+).style.display="none";
+
+
+q.a.forEach(
+(answer,index)=>{
+
+let button =
+document.createElement("button");
+
+button.textContent =
+String.fromCharCode(65+index)
++
+") "
++
+answer;
+
+button.onclick =
+()=>answerQuestion(
+index
+);
+
+container.appendChild(button);
+
+});
+
+
+document.getElementById(
+"quiz"
+).style.display="flex";
+
+}
+
+
+/* =========================================================
+   RESPONDER
+========================================================= */
+
+function answerQuestion(choice){
+
+let q =
+questions[currentMission];
+
+let correct =
+choice===q.correct;
+
+document
+.querySelectorAll(".answers button")
+.forEach(
+button=>{
+button.disabled=true;
+}
+);
+
+let feedback =
+document.getElementById(
+"feedback"
+);
+
+
+if(correct){
+
+score+=100;
+
+answered++;
+
+completed.add(
+currentMission
+);
+
+feedback.textContent =
+"✅ CORRETO! +100 pontos";
+
+feedback.className =
+"good";
+
+beep(700);
+
+}else{
+
+score =
+Math.max(
+0,
+score-25
+);
+
+lives--;
+
+feedback.textContent =
+"❌ ERRADO! -25 pontos e -1 vida";
+
+feedback.className =
+"bad";
+
+beep(100);
+
+}
+
+updateUI();
+
+
+let continueButton =
+document.getElementById(
+"continueButton"
+);
+
+continueButton.style.display =
+"inline-block";
+
+
+continueButton.onclick =
+()=>{
+
+document.getElementById(
+"quiz"
+).style.display="none";
+
+currentMission=null;
+
+if(lives<=0){
+
+finish(
+false,
+"Você perdeu todas as vidas!"
+);
+
+}else{
+
+paused=false;
+
+}
+
+};
+
+}
+
+
+/* =========================================================
+   SAÍDA
+========================================================= */
+
+function checkExit(){
+
+if(
+player.x===exit.x &&
+player.y===exit.y
+){
+
+if(answered===12){
+
+finish(
+true,
+"Você respondeu todas as 12 perguntas e escapou!"
+);
+
+}
+
+}
+
+}
+
+
+/* =========================================================
+   IA DOS FANTASMAS
+========================================================= */
+
+function findNextStep(ghost){
+
+let queue=[
+
+{
+x:ghost.x,
+y:ghost.y
+}
+
+];
+
+let previous =
+new Map();
+
+function key(p){
+
+return p.x+","+p.y;
+
+}
+
+previous.set(
+key(queue[0]),
+null
+);
+
+
+while(queue.length){
+
+let current =
+queue.shift();
+
+
+if(
+current.x===player.x &&
+current.y===player.y
+){
+
+break;
+
+}
+
+
+let dirs=[
+
+{x:1,y:0},
+
+{x:-1,y:0},
+
+{x:0,y:1},
+
+{x:0,y:-1}
+
+];
+
+
+for(let d of dirs){
+
+let next={
+
+x:current.x+d.x,
+
+y:current.y+d.y
+
+};
+
+if(
+!isWall(next.x,next.y) &&
+!previous.has(key(next))
+){
+
+previous.set(
+key(next),
+current
+);
+
+queue.push(next);
+
+}
+
+}
+
+}
+
+
+let target={
+x:player.x,
+y:player.y
+};
+
+if(!previous.has(key(target)))
+return null;
+
+
+let current=target;
+
+let before=null;
+
+
+while(previous.get(key(current))!==null){
+
+before=current;
+
+current=
+previous.get(
+key(current)
+);
+
+if(
+current.x===ghost.x &&
+current.y===ghost.y
+){
+
+return before;
+
+}
+
+}
+
+return null;
+
+}
+
+
+/* =========================================================
+   MOVIMENTO DOS FANTASMAS
+========================================================= */
+
+function moveGhosts(){
+
+if(!playing)
+return;
+
+if(paused)
+return;
+
+if(currentMission!==null)
+return;
+
+
+ghosts.forEach(ghost=>{
+
+let next =
+findNextStep(ghost);
+
+if(next){
+
+ghost.x=
+next.x;
+
+ghost.y=
+next.y;
+
+}
+
+});
+
+
+checkCollision();
+
+}
+
+
+/* =========================================================
+   COLISÃO
+========================================================= */
+
+function checkCollision(){
+
+for(let ghost of ghosts){
+
+if(
+ghost.x===player.x &&
+ghost.y===player.y
+){
+
+lives--;
+
+score =
+Math.max(
+0,
+score-50
+);
+
+updateUI();
+
+beep(80);
+
+
+if(lives<=0){
+
+finish(
+false,
+"Um fantasma pegou você e suas vidas acabaram!"
+);
+
+return;
+
+}
+
+
+/* volta para o início */
+
+player={
+x:1,
+y:1
+};
+
+}
+
+}
+
+}
+
+
+/* =========================================================
+   COMEÇAR
+========================================================= */
+
+function startGame(){
+
+clearInterval(timer);
+
+clearInterval(ghostTimer);
+
+
+player={
+x:1,
+y:1
+};
+
+score=0;
+
+lives=3;
+
+answered=0;
+
+timeLeft=300;
+
+completed=
+new Set();
+
+currentMission=null;
+
+playing=true;
+
+paused=false;
+
+
+ghosts=[
+
+{
+x:12,
+y:9,
+color:"#ff4d5d"
+},
+
+{
+x:20,
+y:9,
+color:"#4edfff"
+},
+
+{
+x:8,
+y:15,
+color:"#ff80d0"
+}
+
+];
+
+
+timer =
+setInterval(
+()=>{
+
+if(
+playing &&
+!paused
+){
+
+timeLeft--;
+
+if(timeLeft<=0){
+
+finish(
+false,
+"O tempo acabou!"
+);
+
+}
+
+updateUI();
+
+}
+
+},
+1000
+);
+
+
+/*
+FANTASMAS MAIS LENTOS
+
+Eles se movem a cada 1 segundo.
+*/
+
+ghostTimer =
+setInterval(
+moveGhosts,
+1000
+);
+
+updateUI();
+
+}
+
+
+/* =========================================================
+   PAUSAR
+========================================================= */
+
+function togglePause(){
+
+if(
+playing &&
+currentMission===null
+){
+
+paused=!paused;
+
+}
+
+}
+
+
+/* =========================================================
+   FINAL
+========================================================= */
+
+function finish(win,message){
+
+playing=false;
+
+paused=true;
+
+clearInterval(timer);
+
+clearInterval(ghostTimer);
+
+
+if(win){
+
+let bonus =
+timeLeft*2;
+
+score+=bonus;
+
+document.getElementById(
+"finishTitle"
+).textContent =
+"🏆 VOCÊ ESCAPOU!";
+
+document.getElementById(
+"finishText"
+).textContent =
+message+
+" Bônus de tempo: "+
+bonus+
+" pontos!";
+
+}else{
+
+document.getElementById(
+"finishTitle"
+).textContent =
+
