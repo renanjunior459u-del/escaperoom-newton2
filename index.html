@@ -1,241 +1,53 @@
-<!DOCTYPE html>
+a<!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Escape Newton</title>
-
 <style>
-
-*{
-box-sizing:border-box;
-}
-
-body{
-margin:0;
-background:#050814;
-color:white;
-font-family:Arial,sans-serif;
-text-align:center;
-}
-
-h1{
-color:#ffd83d;
-margin:15px 0 5px;
-font-size:38px;
-}
-
-.subtitle{
-color:#b8c4df;
-margin-bottom:12px;
-}
-
-#game{
-width:min(780px,96vw);
-height:auto;
-border:3px solid #294d9b;
-border-radius:12px;
-background:#02040a;
-display:block;
-margin:auto;
-}
-
-.stats{
-width:min(780px,96vw);
-margin:10px auto;
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:6px;
-}
-
-.stat{
-background:#11182d;
-border:1px solid #294071;
-border-radius:8px;
-padding:7px;
-font-size:12px;
-color:#9caaca;
-}
-
-.stat b{
-display:block;
-font-size:17px;
-color:white;
-margin-top:3px;
-}
-
-.buttons{
-margin:10px auto;
-width:min(780px,96vw);
-display:flex;
-justify-content:center;
-gap:8px;
-flex-wrap:wrap;
-}
-
-button{
-border:0;
-border-radius:9px;
-padding:11px 16px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.start{
-background:#ffd83d;
-color:#171300;
-}
-
-.normal{
-background:#26375f;
-color:white;
-}
-
-.controls{
-display:grid;
-grid-template-columns:60px 60px 60px;
-justify-content:center;
-gap:5px;
-margin:12px auto;
-}
-
-.controls button{
-height:52px;
-font-size:20px;
-background:#172548;
-color:white;
-border:1px solid #38518a;
-}
-
-.pause{
-grid-column:1/4;
-font-size:13px!important;
-}
-
-.info{
-width:min(780px,96vw);
-margin:15px auto;
-background:#10172b;
-border:1px solid #2d4478;
-border-radius:12px;
-padding:12px;
-text-align:left;
-}
-
-.info h2{
-color:#ffd83d;
-margin-top:0;
-}
-
-.info p{
-line-height:1.5;
-color:#c3cde1;
-}
-
-.progress{
-height:9px;
-background:#202a44;
-border-radius:20px;
-overflow:hidden;
-}
-
-#bar{
-height:100%;
-width:0%;
-background:#ffd83d;
-}
-
-.overlay{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.78);
-display:none;
-align-items:center;
-justify-content:center;
-padding:15px;
-z-index:20;
-}
-
-.box{
-background:#11182d;
-border:2px solid #385ca4;
-border-radius:15px;
-width:min(650px,95vw);
-padding:20px;
-}
-
-.box h2{
-color:#ffd83d;
-}
-
-.answers{
-display:grid;
-gap:9px;
-margin-top:15px;
-}
-
-.answers button{
-background:#1d2b4d;
-border:1px solid #3c5485;
-color:white;
-text-align:left;
-}
-
-.answers button:hover{
-background:#29406f;
-}
-
-#feedback{
-margin:15px 0;
-min-height:22px;
-font-weight:bold;
-}
-
-.good{
-color:#55e38a;
-}
-
-.bad{
-color:#ff6570;
-}
-
-#finalScore{
-font-size:35px;
-color:#ffd83d;
-font-weight:bold;
-margin:15px;
-}
-
+*{box-sizing:border-box}
+body{margin:0;background:#050814;color:#fff;font-family:Arial,sans-serif;text-align:center}
+h1{color:#ffd83d;margin:14px 0 4px}
+.subtitle{color:#b9c4dd;margin:0 0 12px}
+#game{display:block;width:min(780px,96vw);height:auto;margin:auto;background:#02040a;border:3px solid #294d9b;border-radius:12px}
+.stats{width:min(780px,96vw);margin:10px auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.stat{background:#11182d;border:1px solid #294071;border-radius:8px;padding:7px;font-size:12px;color:#9caaca}
+.stat b{display:block;color:#fff;font-size:17px;margin-top:2px}
+.buttons{margin:10px auto;display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:9px;padding:10px 14px;font-weight:bold;cursor:pointer}
+.primary{background:#ffd83d;color:#171300}
+.secondary{background:#26375f;color:#fff}
+.controls{display:grid;grid-template-columns:58px 58px 58px;justify-content:center;gap:5px;margin:10px auto}
+.controls button{height:50px;background:#172548;color:white;border:1px solid #38518a;font-size:20px}
+.pause{grid-column:1/4;font-size:13px!important}
+.info{width:min(780px,96vw);margin:12px auto 25px;background:#10172b;border:1px solid #2d4478;border-radius:12px;padding:12px;text-align:left}
+.info h2{color:#ffd83d;margin:0 0 8px}
+.info p{line-height:1.45;color:#c3cde1}
+.progress{height:9px;background:#202a44;border-radius:20px;overflow:hidden}
+.progress div{height:100%;background:#ffd83d;width:0}
+.overlay{position:fixed;inset:0;background:#000c;display:none;align-items:center;justify-content:center;padding:15px;z-index:10}
+.box{background:#11182d;border:2px solid #385ca4;border-radius:15px;width:min(650px,95vw);padding:20px}
+.box h2{color:#ffd83d}
+.answers{display:grid;gap:9px;margin-top:15px}
+.answers button{background:#1d2b4d;border:1px solid #3c5485;color:#fff;text-align:left}
+#feedback{min-height:22px;margin:14px 0;font-weight:bold}
+.good{color:#55e38a}
+.bad{color:#ff6570}
+#finalScore{font-size:34px;color:#ffd83d;font-weight:bold;margin:15px}
 @media(max-width:600px){
-
-h1{
-font-size:28px;
+h1{font-size:28px}
+.stats{grid-template-columns:repeat(3,1fr)}
 }
-
-.stats{
-grid-template-columns:repeat(3,1fr);
-}
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
 <h1>⚡ ESCAPE NEWTON</h1>
 
-<div class="subtitle">
-Labirinto da Inércia — responda 12 perguntas para escapar!
-</div>
-
+<p class="subtitle">
+Labirinto da Inércia — responda 12 perguntas e escape!
+</p>
 
 <div class="stats">
 
@@ -266,30 +78,23 @@ RECORDE
 
 </div>
 
-
-<canvas
-id="game"
-width="780"
-height="600">
-</canvas>
-
+<canvas id="game" width="780" height="600"></canvas>
 
 <div class="buttons">
 
-<button class="start" onclick="startGame()">
+<button class="primary" onclick="startGame()">
 ▶ COMEÇAR
 </button>
 
-<button class="normal" onclick="startGame()">
+<button class="secondary" onclick="startGame()">
 ↻ REINICIAR
 </button>
 
-<button class="normal" onclick="toggleSound()">
+<button class="secondary" onclick="toggleSound()" id="soundBtn">
 🔊 SOM
 </button>
 
 </div>
-
 
 <div class="controls">
 
@@ -313,38 +118,34 @@ height="600">
 ▶
 </button>
 
-<button
-class="pause"
-onclick="togglePause()">
+<button class="pause" onclick="togglePause()">
 ⏸ PAUSAR
 </button>
 
 </div>
 
-
 <div class="info">
 
-<h2>🎯 COMO JOGAR</h2>
+<h2>🎯 Como jogar</h2>
 
 <p>
-Encontre os <b>12 pontos amarelos (?)</b> espalhados pelo labirinto.
-Cada ponto abre uma pergunta sobre a Primeira Lei de Newton.
+Encontre os 12 pontos amarelos <b>?</b>.
+Cada um abre uma pergunta sobre a Primeira Lei de Newton.
 </p>
 
 <p>
-✅ Resposta correta: <b>+100 pontos</b>
+✅ Acerto: <b>+100 pontos</b>
+&nbsp;
+❌ Erro: <b>-25 pontos e -1 vida</b>
 </p>
 
 <p>
-❌ Resposta errada: <b>-25 pontos e -1 vida</b>
+👻 Os fantasmas perseguem você.
+Se encostar em um, perde uma vida.
 </p>
 
 <p>
-👻 Cuidado com os fantasmas! Se eles encostarem em você, perde uma vida.
-</p>
-
-<p>
-🚪 Depois de responder as 12 perguntas, vá até a saída verde.
+🚪 Depois das 12 perguntas, vá até a saída verde.
 </p>
 
 <div class="progress">
@@ -353,13 +154,11 @@ Cada ponto abre uma pergunta sobre a Primeira Lei de Newton.
 
 <p>
 <b>1ª Lei de Newton:</b>
-Um corpo tende a permanecer em repouso ou em movimento retilíneo uniforme quando a força resultante sobre ele é zero.
+quando a força resultante é zero,
+um corpo permanece em repouso ou em movimento retilíneo uniforme.
 </p>
 
 </div>
-
-
-<!-- PERGUNTAS -->
 
 <div class="overlay" id="quiz">
 
@@ -371,25 +170,17 @@ Um corpo tende a permanecer em repouso ou em movimento retilíneo uniforme quand
 
 <p id="questionText"></p>
 
-<div class="answers"
-id="answers">
-</div>
+<div class="answers" id="answers"></div>
 
 <div id="feedback"></div>
 
-<button
-class="start"
-id="continueButton"
-style="display:none">
+<button class="primary" id="continueButton" style="display:none">
 Continuar
 </button>
 
 </div>
 
 </div>
-
-
-<!-- FINAL -->
 
 <div class="overlay" id="finish">
 
@@ -405,9 +196,7 @@ Continuar
 
 <p id="finishText"></p>
 
-<button
-class="start"
-onclick="closeFinish()">
+<button class="primary" onclick="closeFinish()">
 Jogar novamente
 </button>
 
@@ -415,33 +204,24 @@ Jogar novamente
 
 </div>
 
-
 <script>
 
+"use strict";
 
-/* =========================================================
-   CONFIGURAÇÕES
-========================================================= */
+const canvas=document.getElementById("game");
 
-const canvas =
-document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-const ctx =
-canvas.getContext("2d");
+const TILE=30;
 
-const TILE = 30;
+const COLS=26;
 
-const COLS = 26;
-
-const ROWS = 20;
+const ROWS=20;
 
 
-/* =========================================================
-   NOVO MAPA
-   TODOS OS CORREDORES SÃO CONECTADOS.
-========================================================= */
+/* MAPA */
 
-const map = [
+const map=[
 
 "##########################",
 
@@ -483,383 +263,275 @@ const map = [
 
 "##########################"
 
-].map(row => row.split(""));
+].map(r=>r.split(""));
 
 
-/* =========================================================
-   POSIÇÃO DAS 12 MISSÕES
-========================================================= */
+/* 12 MISSÕES */
 
-const missions = [
+const missions=[
 
 [3,1],
-[8,1],
-[15,1],
+[9,1],
+[16,1],
 [22,1],
 
-[3,3],
-[10,3],
-[18,3],
+[4,3],
+[12,3],
+[20,3],
 
-[22,5],
+[7,5],
+[17,5],
 
-[5,7],
-[14,7],
-
-[20,9],
-
-[7,11]
+[3,7],
+[13,7],
+[21,9]
 
 ];
 
 
-/* =========================================================
-   SAÍDA
-========================================================= */
+/* SAÍDA */
 
-const exit = {
+const exit={
 x:22,
 y:17
 };
 
 
-/* =========================================================
-   PERGUNTAS
-========================================================= */
+/* PERGUNTAS */
 
-const questions = [
+const questions=[
 
 {
-
 q:"O que afirma a Primeira Lei de Newton?",
-
 a:[
-"Todo corpo precisa de uma força para continuar se movendo.",
+"Todo corpo precisa de força para continuar se movendo.",
 "Um corpo permanece em repouso ou em movimento retilíneo uniforme quando a força resultante é zero.",
 "Todo corpo parado possui força resultante máxima.",
-"A velocidade de um corpo sempre aumenta."
+"A velocidade sempre aumenta."
 ],
-
-correct:1
-
+c:1
 },
 
-
 {
-
 q:"Qual conceito está diretamente relacionado à Primeira Lei de Newton?",
-
 a:[
 "Inércia",
 "Temperatura",
 "Pressão",
 "Potência"
 ],
-
-correct:0
-
+c:0
 },
 
-
 {
-
-q:"Um livro está parado sobre uma mesa e a força resultante é zero. O que acontece?",
-
+q:"Um livro está parado sobre uma mesa e a força resultante é zero. O que ele tende a fazer?",
 a:[
-"Ele começa a subir.",
-"Ele continua em repouso.",
-"Ele acelera para a direita.",
-"Ele começa a girar sozinho."
+"Começar a subir.",
+"Continuar em repouso.",
+"Acelerar para a direita.",
+"Girar sozinho."
 ],
-
-correct:1
-
+c:1
 },
 
-
 {
-
-q:"Um objeto está se movimentando em linha reta com velocidade constante. Qual é sua força resultante?",
-
+q:"Um objeto se move em linha reta com velocidade constante. Qual é a força resultante?",
 a:[
 "Zero.",
 "Máxima.",
 "Sempre para frente.",
 "Sempre para trás."
 ],
-
-correct:0
-
+c:0
 },
 
-
 {
-
 q:"Por que uma pessoa tende a ir para frente quando um ônibus freia?",
-
 a:[
 "Por causa da inércia.",
 "Porque a massa desaparece.",
 "Porque a gravidade aumenta.",
-"Porque o banco empurra a pessoa."
+"Porque o banco empurra para frente."
 ],
-
-correct:0
-
+c:0
 },
 
-
 {
-
 q:"Qual situação representa a inércia?",
-
 a:[
-"Uma bola mudando de direção devido a uma força.",
+"Uma bola mudando de direção por uma força.",
 "Um passageiro indo para frente quando o carro freia.",
 "Uma lâmpada acendendo.",
 "Uma mola sendo comprimida."
 ],
-
-correct:1
-
+c:1
 },
 
-
 {
-
 q:"Se a força resultante sobre um corpo não é zero, ele pode:",
-
 a:[
-"Continuar necessariamente com velocidade constante.",
-"Soferer aceleração.",
+"Manter necessariamente velocidade constante.",
+"Sofrer aceleração.",
 "Perder sua massa.",
 "Perder sua inércia."
 ],
-
-correct:1
-
+c:1
 },
 
-
 {
-
 q:"A inércia está relacionada principalmente à:",
-
 a:[
 "Cor.",
 "Massa.",
 "Temperatura.",
 "Velocidade da luz."
 ],
-
-correct:1
-
+c:1
 },
 
-
 {
-
-q:"Um objeto no espaço continua em movimento sem uma força resultante significativa. O que acontece?",
-
+q:"Um objeto no espaço continua em movimento sem força resultante significativa. O que acontece?",
 a:[
 "Ele para imediatamente.",
 "Ele acelera sozinho.",
 "Ele continua em movimento retilíneo uniforme.",
 "Ele desaparece."
 ],
-
-correct:2
-
+c:2
 },
 
-
 {
-
 q:"Qual afirmação está correta?",
-
 a:[
 "Inércia é uma força.",
 "Inércia é a tendência de resistir a mudanças no movimento.",
 "Somente objetos parados possuem inércia.",
 "Objetos pequenos não possuem inércia."
 ],
-
-correct:1
-
+c:1
 },
 
-
 {
-
-q:"Duas forças de mesma intensidade e sentidos opostos atuam em um objeto. A força resultante é:",
-
+q:"Duas forças de mesma intensidade e sentidos opostos atuam em um objeto. A resultante é:",
 a:[
 "Zero.",
 "O dobro.",
 "A metade.",
 "Impossível de calcular."
 ],
-
-correct:0
-
+c:0
 },
 
-
 {
-
 q:"Por que usamos cinto de segurança no carro?",
-
 a:[
 "Para aumentar a velocidade.",
 "Para impedir que o corpo continue seguindo para frente por causa da inércia.",
 "Para diminuir a massa.",
 "Para eliminar a gravidade."
 ],
-
-correct:1
-
+c:1
 }
 
 ];
 
 
-/* =========================================================
-   JOGADOR
-========================================================= */
-
-let player = {
-
+let player={
 x:1,
-
 y:1
-
 };
 
 
-/* =========================================================
-   FANTASMAS
-========================================================= */
-
-let ghosts = [
+let ghosts=[
 
 {
-
 x:12,
-y:9,
+y:1,
 color:"#ff4d5d"
-
 },
 
 {
-
 x:20,
-y:9,
+y:5,
 color:"#4edfff"
-
 },
 
 {
-
 x:8,
-y:15,
+y:13,
 color:"#ff80d0"
-
 }
 
 ];
 
 
-/* =========================================================
-   VARIÁVEIS
-========================================================= */
+let score=0;
 
-let score = 0;
+let lives=3;
 
-let lives = 3;
+let answered=0;
 
-let answered = 0;
+let timeLeft=300;
 
-let timeLeft = 300;
+let playing=false;
 
-let playing = false;
+let paused=false;
 
-let paused = false;
+let currentMission=null;
 
-let currentMission = null;
+let completed=new Set();
 
-let completed = new Set();
+let timer=null;
 
-let timer = null;
+let ghostTimer=null;
 
-let ghostTimer = null;
+let soundOn=true;
 
-let soundOn = true;
-
-let animation = 0;
+let animation=0;
 
 
-/* =========================================================
-   VERIFICA PAREDE
-========================================================= */
+/* PAREDE */
 
 function isWall(x,y){
 
-return (
-
-x < 0 ||
-
-y < 0 ||
-
-x >= COLS ||
-
-y >= ROWS ||
-
-map[y][x] === "#"
-
-);
+return x<0 ||
+y<0 ||
+x>=COLS ||
+y>=ROWS ||
+map[y][x]==="#";
 
 }
 
 
-/* =========================================================
-   ATUALIZA INTERFACE
-========================================================= */
+/* INTERFACE */
 
 function updateUI(){
 
-document.getElementById("score").textContent =
+document.getElementById("score").textContent=
 score;
 
-document.getElementById("count").textContent =
-answered + "/12";
+document.getElementById("count").textContent=
+answered+"/12";
 
-document.getElementById("lives").textContent =
-"❤️".repeat(lives) +
+document.getElementById("lives").textContent=
+"❤️".repeat(lives)+
 "🖤".repeat(3-lives);
 
-let min =
-Math.floor(timeLeft/60);
+document.getElementById("time").textContent=
+String(Math.floor(timeLeft/60)).padStart(2,"0")+
+":"+
+String(timeLeft%60).padStart(2,"0");
 
-let sec =
-timeLeft%60;
+document.getElementById("bar").style.width=
+(answered/12*100)+"%";
 
-document.getElementById("time").textContent =
-String(min).padStart(2,"0") +
-":" +
-String(sec).padStart(2,"0");
-
-document.getElementById("bar").style.width =
-(answered/12*100) + "%";
-
-document.getElementById("best").textContent =
-localStorage.getItem("escapeNewtonBest") || 0;
+document.getElementById("best").textContent=
+localStorage.getItem("escapeNewtonBest")||0;
 
 }
 
 
-/* =========================================================
-   SOM
-========================================================= */
+/* SOM */
 
 function beep(freq){
 
@@ -867,30 +539,26 @@ if(!soundOn)return;
 
 try{
 
-const audio =
-new AudioContext();
+const ac=
+new (window.AudioContext||window.webkitAudioContext)();
 
-const oscillator =
-audio.createOscillator();
+const o=
+ac.createOscillator();
 
-const gain =
-audio.createGain();
+const g=
+ac.createGain();
 
-oscillator.frequency.value =
-freq;
+o.frequency.value=freq;
 
-gain.gain.value =
-0.03;
+g.gain.value=.025;
 
-oscillator.connect(gain);
+o.connect(g);
 
-gain.connect(audio.destination);
+g.connect(ac.destination);
 
-oscillator.start();
+o.start();
 
-oscillator.stop(
-audio.currentTime + .08
-);
+o.stop(ac.currentTime+.07);
 
 }catch(e){}
 
@@ -901,12 +569,15 @@ function toggleSound(){
 
 soundOn=!soundOn;
 
+document.getElementById("soundBtn").textContent=
+soundOn
+?"🔊 SOM"
+:"🔇 SOM";
+
 }
 
 
-/* =========================================================
-   DESENHAR MAPA
-========================================================= */
+/* DESENHAR */
 
 function draw(){
 
@@ -916,9 +587,6 @@ ctx.clearRect(
 canvas.width,
 canvas.height
 );
-
-
-/* fundo */
 
 ctx.fillStyle="#02040a";
 
@@ -956,6 +624,17 @@ TILE-2,
 TILE-2
 );
 
+}else{
+
+ctx.fillStyle="#06101d";
+
+ctx.fillRect(
+x*TILE,
+y*TILE,
+TILE,
+TILE
+);
+
 }
 
 }
@@ -965,19 +644,14 @@ TILE-2
 
 /* missões */
 
-missions.forEach((mission,index)=>{
+missions.forEach((m,i)=>{
 
-if(completed.has(index))
+if(completed.has(i))
 return;
 
-let cx =
-mission[0]*TILE+15;
+const cx=m[0]*TILE+15;
 
-let cy =
-mission[1]*TILE+15;
-
-let pulse =
-Math.sin(animation*.1+index)*2;
+const cy=m[1]*TILE+15;
 
 ctx.fillStyle="#ffd83d";
 
@@ -986,7 +660,7 @@ ctx.beginPath();
 ctx.arc(
 cx,
 cy,
-7+pulse,
+7+Math.sin(animation*.1+i)*1.5,
 0,
 Math.PI*2
 );
@@ -1012,16 +686,16 @@ cy
 
 /* saída */
 
-let ex =
+const ex=
 exit.x*TILE+15;
 
-let ey =
+const ey=
 exit.y*TILE+15;
 
-ctx.fillStyle =
+ctx.fillStyle=
 answered===12
 ?"#55e38a"
-:"#7d2634";
+:"#702b36";
 
 ctx.fillRect(
 ex-9,
@@ -1030,7 +704,7 @@ ey-12,
 24
 );
 
-ctx.fillStyle="white";
+ctx.fillStyle="#fff";
 
 ctx.font="bold 8px Arial";
 
@@ -1045,13 +719,13 @@ ey+22
 
 ghosts.forEach(g=>{
 
-let gx =
+const gx=
 g.x*TILE+15;
 
-let gy =
+const gy=
 g.y*TILE+15;
 
-ctx.fillStyle =
+ctx.fillStyle=
 g.color;
 
 ctx.beginPath();
@@ -1094,9 +768,7 @@ ctx.closePath();
 ctx.fill();
 
 
-/* olhos */
-
-ctx.fillStyle="white";
+ctx.fillStyle="#fff";
 
 ctx.beginPath();
 
@@ -1123,10 +795,10 @@ ctx.fill();
 
 /* jogador */
 
-let px =
+const px=
 player.x*TILE+15;
 
-let py =
+const py=
 player.y*TILE+15;
 
 ctx.fillStyle="#ffd83d";
@@ -1144,8 +816,6 @@ Math.PI*2
 ctx.fill();
 
 
-/* olho */
-
 ctx.fillStyle="#171300";
 
 ctx.beginPath();
@@ -1160,7 +830,6 @@ Math.PI*2
 
 ctx.fill();
 
-
 animation++;
 
 requestAnimationFrame(draw);
@@ -1168,25 +837,19 @@ requestAnimationFrame(draw);
 }
 
 
-/* =========================================================
-   MOVIMENTO DO JOGADOR
-========================================================= */
+/* MOVIMENTO */
 
 function movePlayer(dx,dy){
 
-if(!playing)
+if(!playing||
+paused||
+currentMission!==null)
 return;
 
-if(paused)
-return;
-
-if(currentMission!==null)
-return;
-
-let nx =
+const nx=
 player.x+dx;
 
-let ny =
+const ny=
 player.y+dy;
 
 if(isWall(nx,ny))
@@ -1196,7 +859,7 @@ player.x=nx;
 
 player.y=ny;
 
-beep(250);
+beep(240);
 
 checkMission();
 
@@ -1207,24 +870,17 @@ checkCollision();
 }
 
 
-/* =========================================================
-   ENCONTRAR MISSÃO
-========================================================= */
+/* MISSÃO */
 
 function checkMission(){
 
-for(
-let i=0;
-i<missions.length;
-i++
-){
+for(let i=0;i<missions.length;i++){
 
-let m =
-missions[i];
+const m=missions[i];
 
 if(
-!completed.has(i) &&
-m[0]===player.x &&
+!completed.has(i)&&
+m[0]===player.x&&
 m[1]===player.y
 ){
 
@@ -1239,9 +895,7 @@ return;
 }
 
 
-/* =========================================================
-   ABRIR PERGUNTA
-========================================================= */
+/* ABRIR PERGUNTA */
 
 function openQuestion(index){
 
@@ -1249,54 +903,53 @@ currentMission=index;
 
 paused=true;
 
-let q =
+const q=
 questions[index];
 
 document.getElementById(
 "questionTitle"
-).textContent =
-"🧠 Pergunta " +
-(answered+1) +
+).textContent=
+"🧠 Pergunta "+
+(answered+1)+
 " de 12";
 
 document.getElementById(
 "questionText"
-).textContent =
+).textContent=
 q.q;
 
-let container =
+const box=
 document.getElementById("answers");
 
-container.innerHTML="";
+box.innerHTML="";
 
 document.getElementById(
 "feedback"
 ).textContent="";
 
 document.getElementById(
+"feedback"
+).className="";
+
+document.getElementById(
 "continueButton"
 ).style.display="none";
 
 
-q.a.forEach(
-(answer,index)=>{
+q.a.forEach((answer,i)=>{
 
-let button =
+const b=
 document.createElement("button");
 
-button.textContent =
-String.fromCharCode(65+index)
-+
-") "
-+
+b.textContent=
+String.fromCharCode(65+i)+
+") "+
 answer;
 
-button.onclick =
-()=>answerQuestion(
-index
-);
+b.onclick=
+()=>answerQuestion(i);
 
-container.appendChild(button);
+box.appendChild(b);
 
 });
 
@@ -1308,27 +961,23 @@ document.getElementById(
 }
 
 
-/* =========================================================
-   RESPONDER
-========================================================= */
+/* RESPONDER */
 
 function answerQuestion(choice){
 
-let q =
+const q=
 questions[currentMission];
 
-let correct =
-choice===q.correct;
+const correct=
+choice===q.c;
 
 document
-.querySelectorAll(".answers button")
+.querySelectorAll("#answers button")
 .forEach(
-button=>{
-button.disabled=true;
-}
+b=>b.disabled=true
 );
 
-let feedback =
+const feedback=
 document.getElementById(
 "feedback"
 );
@@ -1344,17 +993,17 @@ completed.add(
 currentMission
 );
 
-feedback.textContent =
+feedback.textContent=
 "✅ CORRETO! +100 pontos";
 
-feedback.className =
+feedback.className=
 "good";
 
 beep(700);
 
 }else{
 
-score =
+score=
 Math.max(
 0,
 score-25
@@ -1362,10 +1011,10 @@ score-25
 
 lives--;
 
-feedback.textContent =
+feedback.textContent=
 "❌ ERRADO! -25 pontos e -1 vida";
 
-feedback.className =
+feedback.className=
 "bad";
 
 beep(100);
@@ -1375,23 +1024,23 @@ beep(100);
 updateUI();
 
 
-let continueButton =
+const cont=
 document.getElementById(
 "continueButton"
 );
 
-continueButton.style.display =
+cont.style.display=
 "inline-block";
 
 
-continueButton.onclick =
-()=>{
+cont.onclick=()=>{
 
 document.getElementById(
 "quiz"
 ).style.display="none";
 
 currentMission=null;
+
 
 if(lives<=0){
 
@@ -1411,150 +1060,125 @@ paused=false;
 }
 
 
-/* =========================================================
-   SAÍDA
-========================================================= */
+/* SAÍDA */
 
 function checkExit(){
 
 if(
-player.x===exit.x &&
-player.y===exit.y
+player.x===exit.x&&
+player.y===exit.y&&
+answered===12
 ){
-
-if(answered===12){
 
 finish(
 true,
-"Você respondeu todas as 12 perguntas e escapou!"
+"Você respondeu as 12 perguntas e encontrou a saída!"
 );
 
 }
 
 }
 
-}
 
+/* CAMINHO DOS FANTASMAS */
 
-/* =========================================================
-   IA DOS FANTASMAS
-========================================================= */
+function nextGhostStep(g){
 
-function findNextStep(ghost){
-
-let queue=[
-
-{
-x:ghost.x,
-y:ghost.y
-}
-
-];
-
-let previous =
-new Map();
-
-function key(p){
-
-return p.x+","+p.y;
-
-}
-
-previous.set(
-key(queue[0]),
-null
-);
-
-
-while(queue.length){
-
-let current =
-queue.shift();
-
-
-if(
-current.x===player.x &&
-current.y===player.y
-){
-
-break;
-
-}
-
-
-let dirs=[
-
-{x:1,y:0},
-
-{x:-1,y:0},
-
-{x:0,y:1},
-
-{x:0,y:-1}
-
-];
-
-
-for(let d of dirs){
-
-let next={
-
-x:current.x+d.x,
-
-y:current.y+d.y
-
+const start={
+x:g.x,
+y:g.y
 };
 
-if(
-!isWall(next.x,next.y) &&
-!previous.has(key(next))
-){
-
-previous.set(
-key(next),
-current
-);
-
-queue.push(next);
-
-}
-
-}
-
-}
-
-
-let target={
+const target={
 x:player.x,
 y:player.y
 };
 
-if(!previous.has(key(target)))
-return null;
+const queue=[
+start
+];
 
+const prev=
+new Map();
 
-let current=target;
+const key=
+p=>p.x+","+p.y;
 
-let before=null;
-
-
-while(previous.get(key(current))!==null){
-
-before=current;
-
-current=
-previous.get(
-key(current)
+prev.set(
+key(start),
+null
 );
 
+const dirs=[
+[1,0],
+[-1,0],
+[0,1],
+[0,-1]
+];
+
+
+while(queue.length){
+
+const cur=
+queue.shift();
+
 if(
-current.x===ghost.x &&
-current.y===ghost.y
+cur.x===target.x&&
+cur.y===target.y
+)
+break;
+
+
+for(const d of dirs){
+
+const n={
+x:cur.x+d[0],
+y:cur.y+d[1]
+};
+
+if(
+!isWall(n.x,n.y)&&
+!prev.has(key(n))
 ){
 
-return before;
+prev.set(
+key(n),
+cur
+);
+
+queue.push(n);
 
 }
+
+}
+
+}
+
+
+if(!prev.has(key(target)))
+return null;
+
+
+let cur=target;
+
+
+while(
+prev.get(key(cur))!==null
+){
+
+const p=
+prev.get(key(cur));
+
+if(
+p.x===start.x&&
+p.y===start.y
+){
+
+return cur;
+
+}
+
+cur=p;
 
 }
 
@@ -1563,34 +1187,28 @@ return null;
 }
 
 
-/* =========================================================
-   MOVIMENTO DOS FANTASMAS
-========================================================= */
+/* MOVIMENTO DOS FANTASMAS */
 
 function moveGhosts(){
 
-if(!playing)
+if(
+!playing||
+paused||
+currentMission!==null
+)
 return;
 
-if(paused)
-return;
 
-if(currentMission!==null)
-return;
+ghosts.forEach(g=>{
 
-
-ghosts.forEach(ghost=>{
-
-let next =
-findNextStep(ghost);
+const next=
+nextGhostStep(g);
 
 if(next){
 
-ghost.x=
-next.x;
+g.x=next.x;
 
-ghost.y=
-next.y;
+g.y=next.y;
 
 }
 
@@ -1602,22 +1220,20 @@ checkCollision();
 }
 
 
-/* =========================================================
-   COLISÃO
-========================================================= */
+/* COLISÃO */
 
 function checkCollision(){
 
-for(let ghost of ghosts){
+for(const g of ghosts){
 
 if(
-ghost.x===player.x &&
-ghost.y===player.y
+g.x===player.x&&
+g.y===player.y
 ){
 
 lives--;
 
-score =
+score=
 Math.max(
 0,
 score-50
@@ -1640,8 +1256,6 @@ return;
 }
 
 
-/* volta para o início */
-
 player={
 x:1,
 y:1
@@ -1654,9 +1268,7 @@ y:1
 }
 
 
-/* =========================================================
-   COMEÇAR
-========================================================= */
+/* COMEÇAR */
 
 function startGame(){
 
@@ -1669,6 +1281,30 @@ player={
 x:1,
 y:1
 };
+
+
+ghosts=[
+
+{
+x:12,
+y:1,
+color:"#ff4d5d"
+},
+
+{
+x:20,
+y:5,
+color:"#4edfff"
+},
+
+{
+x:8,
+y:13,
+color:"#ff80d0"
+}
+
+];
+
 
 score=0;
 
@@ -1688,35 +1324,11 @@ playing=true;
 paused=false;
 
 
-ghosts=[
-
-{
-x:12,
-y:9,
-color:"#ff4d5d"
-},
-
-{
-x:20,
-y:9,
-color:"#4edfff"
-},
-
-{
-x:8,
-y:15,
-color:"#ff80d0"
-}
-
-];
-
-
-timer =
-setInterval(
-()=>{
+timer=
+setInterval(()=>{
 
 if(
-playing &&
+playing&&
 !paused
 ){
 
@@ -1735,36 +1347,31 @@ updateUI();
 
 }
 
-},
-1000
-);
+},1000);
 
 
-/*
-FANTASMAS MAIS LENTOS
+/* fantasmas: 1 movimento por segundo */
 
-Eles se movem a cada 1 segundo.
-*/
-
-ghostTimer =
+ghostTimer=
 setInterval(
 moveGhosts,
 1000
 );
 
+
 updateUI();
+
+beep(600);
 
 }
 
 
-/* =========================================================
-   PAUSAR
-========================================================= */
+/* PAUSAR */
 
 function togglePause(){
 
 if(
-playing &&
+playing&&
 currentMission===null
 ){
 
@@ -1775,9 +1382,7 @@ paused=!paused;
 }
 
 
-/* =========================================================
-   FINAL
-========================================================= */
+/* FINAL */
 
 function finish(win,message){
 
@@ -1792,19 +1397,19 @@ clearInterval(ghostTimer);
 
 if(win){
 
-let bonus =
+const bonus=
 timeLeft*2;
 
 score+=bonus;
 
 document.getElementById(
 "finishTitle"
-).textContent =
+).textContent=
 "🏆 VOCÊ ESCAPOU!";
 
 document.getElementById(
 "finishText"
-).textContent =
+).textContent=
 message+
 " Bônus de tempo: "+
 bonus+
@@ -1814,5 +1419,130 @@ bonus+
 
 document.getElementById(
 "finishTitle"
-).textContent =
+).textContent=
+"💥 GAME OVER";
 
+document.getElementById(
+"finishText"
+).textContent=
+message;
+
+}
+
+
+const best=
+Number(
+localStorage.getItem(
+"escapeNewtonBest"
+)||0
+);
+
+if(score>best){
+
+localStorage.setItem(
+"escapeNewtonBest",
+score
+);
+
+}
+
+
+document.getElementById(
+"finalScore"
+).textContent=
+score+
+" pontos";
+
+document.getElementById(
+"finish"
+).style.display=
+"flex";
+
+updateUI();
+
+}
+
+
+/* RECOMEÇAR */
+
+function closeFinish(){
+
+document.getElementById(
+"finish"
+).style.display=
+"none";
+
+startGame();
+
+}
+
+
+/* TECLADO */
+
+document.addEventListener(
+"keydown",
+e=>{
+
+if(
+e.key==="ArrowUp"||
+e.key==="w"||
+e.key==="W"
+){
+
+movePlayer(0,-1);
+
+}
+
+
+if(
+e.key==="ArrowDown"||
+e.key==="s"||
+e.key==="S"
+){
+
+movePlayer(0,1);
+
+}
+
+
+if(
+e.key==="ArrowLeft"||
+e.key==="a"||
+e.key==="A"
+){
+
+movePlayer(-1,0);
+
+}
+
+
+if(
+e.key==="ArrowRight"||
+e.key==="d"||
+e.key==="D"
+){
+
+movePlayer(1,0);
+
+}
+
+
+if(e.key===" "){
+
+togglePause();
+
+}
+
+});
+
+
+/* INICIAR DESENHO */
+
+updateUI();
+
+draw();
+
+</script>
+
+</body>
+</html>
